@@ -46,7 +46,6 @@
         color: #fff;
         bottom: 0;
         width: 100%;
-        position: fixed;
       }
     </style>
   </head>
@@ -80,9 +79,19 @@
           CloudFlare Pages Functions
         </p>
       </section>
+      <section class="section">
+        <h2>文档</h2>
+        <button id="docs">查看文档</button>
+      </section>
     </div>
     <footer>
       <p>没用的小废鼠长期维护</p>
     </footer>
+    <script>
+      document.getElementById("docs").addEventListener("click", () => {
+        window.open("./docs/index.html");
+      });
+    </script>)
+    </script>
   </body>
 </html>

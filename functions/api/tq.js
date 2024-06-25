@@ -11,7 +11,7 @@ export async function onRequest(context) {
     }
   
     // 从环境变量中获取 API 密钥
-    const apiKey = context.env.API_KEY;
+    const apiKey = context.env.HF_API_KEY;
     if (!apiKey) {
         return new Response(JSON.stringify({ error: 'API key not configured' }), {
             headers: { 'Content-Type': 'application/json' },

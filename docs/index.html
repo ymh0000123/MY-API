@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>文档</title>
+    <style>
+      #navigation-bar {
+        overflow: hidden;
+        background-color: #333;
+        list-style-type: none;
+        top: 0;
+        left: 0;
+        right: 0;
+        position: fixed;
+      }
+      #navigation-bar a {
+        color: white;
+        text-decoration: none;
+        margin-right: 20px;
+      }
+      ul {
+        list-style-type: none;
+        display: flex;
+        align-items: center;
+      }
+      #element,
+      #commentaries {
+        max-width: 900px;
+        margin: 0 auto;
+        margin-top: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        background-color: #ffffff;
+      }
+      #element a {
+        text-decoration: none;
+        color: #1e90ff;
+      }
+      #element img {
+        border-radius: 10px;
+      }
+      #element code {
+        color: hsl(0, 0%, 35%);
+      }
+      body {
+        background-color: #f5f5f5;
+      }
+      h2 {
+        color: #333;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+      }
+    </style>
+    <script>
+      function navigation_bar() {
+        if (document.querySelector("navigation-bar")) {
+          var navbarHeight =
+            document.querySelector("navigation-bar").offsetHeight;
+          console.log(navbarHeight);
+          if (document.querySelector("element")) {
+            document.querySelector("element").style.marginTop =
+              navbarHeight + "px";
+          }
+        }
+      }
+
+      window.onload = function () {
+        adjustMarginTop(); // 初始化调整
+      };
+
+      window.onresize = function () {
+        adjustMarginTop(); // 窗口大小变化时重新调整
+      };
+      function adjustMarginTop() {
+        var navigationBarHeight =
+          document.getElementById("navigation-bar").offsetHeight;
+        document.getElementById("element").style.marginTop =
+          navigationBarHeight + 20 + "px";
+      }
+    </script>
+  </head>
+  <body>
+    <div id="navigation-bar">
+      <ul>
+        <li><a href="/">首页</a></li>
+      </ul>
+    </div>
+    <div id="all">
+      <div id="element">
+        <h1>文档</h1>
+        <p>这是一个文档页面。</p>
+      </div>
+      <div id="element">
+        <h2>IP查询</h2>
+        <pre><code>/api/ip</code></pre>
+        <p>返回IP地址信息</p>
+        <p>返回数据格式</p>
+        <pre><code>
+            {
+                "ip": "你的IP",
+                "location": {
+                    "city": "城市",
+                    "region": "地区",
+                    "country": "国家",
+                }
+            }
+        </code></pre>
+      </div>
+      <div id="element">
+        <h2>天气查询</h2>
+        <pre><code>/api/tq</code></pre>
+        <p>该功能需要配置和风天气的API KEY</p>
+        <p>API KEY需要环境变量  HF_API_KEY</p>
+        <p>返回数据格式</p>
+        <pre><code>
+            {
+                "code": "200",
+                "updateTime": "最近更新时间",
+                "fxLink": "响应式页面URL",
+                "now": {
+                    "obsTime": "数据观测时间",
+                    "temp": "温度",
+                    "feelsLike": "体感温度",
+                    "icon": "和风天气图标码",
+                    "text": "天气状况的文字描述",
+                    "wind360": "风向360角度",
+                    "windDir": "风向",
+                    "windScale": "风力等级",
+                    "windSpeed": "风速",
+                    "humidity": "相对湿度",
+                    "precip": "当前小时累计降水量",
+                    "pressure": "大气压强",
+                    "vis": "能见度",
+                    "cloud": "云量",
+                    "dew": "露点温度"
+                },
+                "refer": {
+                    "sources": [
+                        "天气归属"
+                    ],
+                    "license": [
+                        "和风天气使用协议"
+                    ]
+                }
+            }
+        </code></pre>
+      </div>
+    </div>
+  </body>
+</html>
