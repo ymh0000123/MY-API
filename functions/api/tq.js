@@ -19,28 +19,57 @@ export async function onRequest(context) {
         });
     }
   
-    // 构建第三方 API 请求 URL
-    const url = `https://geoapi.qweather.com/v2/city/lookup?location=${encodeURIComponent(city)}&key=${apiKey}`;
+    // 构建第一个 API 请求 URL
+    const cityLookupUrl = `https://geoapi.qweather.com/v2/city/lookup?location=${encodeURIComponent(city)}&key=${apiKey}`;
   
     try {
-        // 发送请求到第三方 API
-        const apiResponse = await fetch(url);
+        // 发送请求到第一个 API
+        const cityLookupResponse = await fetch(cityLookupUrl);
       
-        // 检查 API 响应状态
-        if (!apiResponse.ok) {
-            return new Response(JSON.stringify({ error: 'Failed to fetch data from third-party API' }), {
+        // 检查第一个 API 响应状态
+        if (!cityLookupResponse.ok) {
+            return new Response(JSON.stringify({ error: 'Failed to fetch city data from third-party API' }), {
                 headers: { 'Content-Type': 'application/json' },
-                status: apiResponse.status,
+                status: cityLookupResponse.status,
             });
         }
       
-        // 获取 API 响应的 JSON 数据
-        const data = await apiResponse.json();
+        // 获取第一个 API 响应的 JSON 数据
+        const cityLookupData = await cityLookupResponse.json();
       
-        // 返回 API 响应数据
-        return new Response(JSON.stringify(data), {
+        // 检查是否有返回的城市数据
+        if (!cityLookupData || !cityLookupData.location || !cityLookupData.location.length) {
+            return new Response(JSON.stringify({ error: 'City data not found' }), {
+                headers: { 'Content-Type': 'application/json' },
+                status: 404,
+            });
+        }
+      
+        // 获取第一个 API 返回的第一个 location 的 id
+        const firstLocationId = cityLookupData.location[0].id;
+      
+        // 构建第二个 API 请求 URL
+        const weatherNowUrl = `https://devapi.qweather.com/v7/weather/now?key=${apiKey}&location=${firstLocationId}`;
+      
+        // 发送请求到第二个 API
+        const weatherNowResponse = await fetch(weatherNowUrl);
+      
+        // 检查第二个 API 响应状态
+        if (!weatherNowResponse.ok) {
+            return new Response(JSON.stringify({ error: 'Failed to fetch weather data from third-party API' }), {
+                headers: { 'Content-Type': 'application/json' },
+                status: weatherNowResponse.status,
+            });
+        }
+      
+        // 获取第二个 API 响应的 JSON 数据
+        const weatherNowData = await weatherNowResponse.json();
+      
+        // 返回第二个 API 响应数据
+        return new Response(JSON.stringify(weatherNowData), {
             headers: { 'Content-Type': 'application/json' },
         });
+      
     } catch (error) {
         // 返回错误信息
         return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
