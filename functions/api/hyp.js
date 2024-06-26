@@ -5,7 +5,7 @@ export async function onRequest(context) {
 
     if (id) {
         const response = await fetch(`https://api.hypixel.net/v2/player?uuid=${id}`, {
-            headers: { 'API-Key': context.env.HF_API_KEY }
+            headers: { 'API-Key': context.env.HYPIXEL_API_KEY }
         });
         const data = await response.json();
         return new Response(JSON.stringify(data), {
