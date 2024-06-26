@@ -4,9 +4,9 @@ export async function onRequest(context) {
     const id = url.searchParams.get('uuid');
 
     if (id) {
-        const response = await fetch(`https://api.hypixel.net/v2/playerr?uuid=${id}`);
+        const response = await fetch(`https://api.hypixel.net/v2/playerr?uuid=${id}`,{headers: { 'API-Key': context.env.HF_API_KEY}});
         const data = await response.json();
-        return new Response(JSON.stringify(data), { status: 200 },{headers: { 'Content-Type': 'application/json' ,'API-Key': context.env.HF_API_KEY},});
+        return new Response(JSON.stringify(data), { status: 200 },{headers: { 'Content-Type': 'application/json' },});
     } else {
         return new Response('No UUID provided', { status: 400 });
     }
