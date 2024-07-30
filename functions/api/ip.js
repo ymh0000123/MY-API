@@ -15,8 +15,13 @@ export async function onRequest(context) {
       }
     });
   
-    // 返回 JSON 响应
+    // 返回 JSON 响应，并设置 CORS 头
     return new Response(jsonResponse, {
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*', // 允许所有来源的跨域请求
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', // 允许的方法
+        'Access-Control-Allow-Headers': 'Content-Type', // 允许的请求头
+      },
     });
-  }
+}
