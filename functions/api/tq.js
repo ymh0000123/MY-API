@@ -20,14 +20,27 @@ function errorResponse(status, code, message, details = undefined) {
     }, status);
 }
 
+function getApiKey(request, url) {
+    const authorization = request.headers.get('authorization') || '';
+    const bearerPrefix = 'Bearer ';
+
+    return (
+        url.searchParams.get('apikey') ||
+        url.searchParams.get('apiKey') ||
+        url.searchParams.get('api_key') ||
+        request.headers.get('x-api-key') ||
+        (authorization.startsWith(bearerPrefix) ? authorization.slice(bearerPrefix.length).trim() : '')
+    )?.trim();
+}
+
 export async function onRequest(context) {
-    // 1. 获取请求中的 API 密钥 (从 URL 查询参数中)
+    // 1. 获取请求中的 API 密钥
     const url = new URL(context.request.url);
-    const apiKey = url.searchParams.get('apikey');
+    const apiKey = getApiKey(context.request, url);
     
     // 检查 API 密钥是否存在
     if (!apiKey) {
-        return errorResponse(401, 'MISSING_API_KEY', '缺少 apikey 参数，请在请求地址中添加 ?apikey=你的密钥。');
+        return errorResponse(401, 'MISSING_API_KEY', '缺少 apikey。请使用 ?apikey=你的密钥，或通过 x-api-key 请求头传入。');
     }
     
     try {

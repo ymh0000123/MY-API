@@ -111,6 +111,7 @@
         <h2>天气查询</h2>
         <pre><code>GET /api/tq?apikey=你的密钥</code></pre>
         <p>根据当前请求的 Cloudflare 城市信息查询实时天气。</p>
+        <p>apikey 可以放在 URL 查询参数中，也可以放在 x-api-key 请求头中。URL 参数兼容 apikey、apiKey 和 api_key 三种写法。</p>
         <p>服务端需要配置环境变量 HF_API_KEY，并绑定 D1 数据库 API_KEYS 用于校验 apikey。</p>
         <p style="color: red;">由于和风天气计费方式调整，该接口必须携带 apikey。</p>
         <p>返回数据格式</p>
@@ -152,7 +153,7 @@
                 "success": false,
                 "error": {
                     "code": "MISSING_API_KEY",
-                    "message": "缺少 apikey 参数，请在请求地址中添加 ?apikey=你的密钥。"
+                    "message": "缺少 apikey。请使用 ?apikey=你的密钥，或通过 x-api-key 请求头传入。"
                 }
             }
         </code></pre>
