@@ -89,12 +89,12 @@
     <div id="all">
       <div id="element">
         <h1>文档</h1>
-        <p>这是一个文档页面。</p>
+        <p>这里列出当前可用 API 的请求方式、参数和返回示例。所有接口在出错时都会返回 JSON，方便调用方直接读取错误原因。</p>
       </div>
       <div id="element">
         <h2>IP查询</h2>
-        <pre><code>/api/ip</code></pre>
-        <p>返回IP地址信息</p>
+        <pre><code>GET /api/ip</code></pre>
+        <p>无需参数，返回当前请求的 IP 地址和 Cloudflare 识别到的地理位置信息。</p>
         <p>返回数据格式</p>
         <pre><code>
             {
@@ -102,17 +102,17 @@
                 "location": {
                     "city": "城市",
                     "region": "地区",
-                    "country": "国家",
+                    "country": "国家"
                 }
             }
         </code></pre>
       </div>
       <div id="element">
         <h2>天气查询</h2>
-        <pre><code>/api/tq</code></pre>
-        <p>该功能需要配置和风天气的API KEY</p>
-        <p>API KEY需要环境变量  HF_API_KEY</p>
-        <p style="color: red;">由于和风天气改变了原有的计费方式 我们使用了apikey校验</p>
+        <pre><code>GET /api/tq?apikey=你的密钥</code></pre>
+        <p>根据当前请求的 Cloudflare 城市信息查询实时天气。</p>
+        <p>服务端需要配置环境变量 HF_API_KEY，并绑定 D1 数据库 API_KEYS 用于校验 apikey。</p>
+        <p style="color: red;">由于和风天气计费方式调整，该接口必须携带 apikey。</p>
         <p>返回数据格式</p>
         <pre><code>
             {
@@ -143,6 +143,41 @@
                     "license": [
                         "和风天气使用协议"
                     ]
+                }
+            }
+        </code></pre>
+        <p>错误返回示例</p>
+        <pre><code>
+            {
+                "success": false,
+                "error": {
+                    "code": "MISSING_API_KEY",
+                    "message": "缺少 apikey 参数，请在请求地址中添加 ?apikey=你的密钥。"
+                }
+            }
+        </code></pre>
+      </div>
+      <div id="element">
+        <h2>Hypixel玩家查询</h2>
+        <pre><code>GET /api/hyp?uuid=玩家UUID</code></pre>
+        <p>根据 Minecraft 玩家 UUID 查询 Hypixel 玩家信息。</p>
+        <p>服务端需要配置环境变量 HYPIXEL_API_KEY。</p>
+        <p>返回数据格式</p>
+        <pre><code>
+            {
+                "success": true,
+                "player": {
+                    "uuid": "玩家UUID"
+                }
+            }
+        </code></pre>
+        <p>错误返回示例</p>
+        <pre><code>
+            {
+                "success": false,
+                "error": {
+                    "code": "MISSING_UUID",
+                    "message": "缺少 uuid 参数，请使用 /api/hyp?uuid=玩家UUID 进行查询。"
                 }
             }
         </code></pre>
