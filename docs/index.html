@@ -109,9 +109,11 @@
       </div>
       <div id="element">
         <h2>天气查询</h2>
-        <pre><code>GET /api/tq?apikey=你的密钥</code></pre>
+        <pre><code>GET /api/weather?apikey=你的密钥</code></pre>
+        <p>兼容旧路径：GET /api/tq?apikey=你的密钥。</p>
         <p>根据当前请求的 Cloudflare 城市信息查询实时天气。</p>
         <p>apikey 可以放在 URL 查询参数中，也可以放在 x-api-key 请求头中。URL 参数兼容 apikey、apiKey 和 api_key 三种写法。</p>
+        <p>location 可选。城市天气接口支持 location=城市名、location=LocationID 或 location=经度,纬度；不传时会优先使用 Cloudflare 识别到的经纬度或城市。</p>
         <p>服务端需要配置环境变量 HF_API_KEY，并绑定 D1 数据库 API_KEYS 用于校验 apikey。</p>
         <p style="color: red;">由于和风天气计费方式调整，该接口必须携带 apikey。</p>
         <p>返回数据格式</p>
@@ -157,6 +159,36 @@
                 }
             }
         </code></pre>
+      </div>
+      <div id="element">
+        <h2>每日天气预报</h2>
+        <pre><code>GET /api/weather-daily?apikey=你的密钥&amp;location=北京&amp;days=3d</code></pre>
+        <p>返回城市每日天气预报。days 可选值：3d、7d、10d、15d、30d，默认 3d。</p>
+        <p>可选参数：location、days、lang、unit。</p>
+      </div>
+      <div id="element">
+        <h2>逐小时天气预报</h2>
+        <pre><code>GET /api/weather-hourly?apikey=你的密钥&amp;location=北京&amp;hours=24h</code></pre>
+        <p>返回城市逐小时天气预报。hours 可选值：24h、72h、168h，默认 24h。</p>
+        <p>可选参数：location、hours、lang、unit。</p>
+      </div>
+      <div id="element">
+        <h2>格点实时天气</h2>
+        <pre><code>GET /api/grid-weather?apikey=你的密钥&amp;location=116.41,39.92</code></pre>
+        <p>返回指定经纬度的格点实时天气。格点天气必须提供经纬度，或让 Cloudflare 提供请求来源经纬度。</p>
+        <p>可选参数：location、lon、lat、lang、unit。</p>
+      </div>
+      <div id="element">
+        <h2>格点每日天气预报</h2>
+        <pre><code>GET /api/grid-weather-daily?apikey=你的密钥&amp;location=116.41,39.92&amp;days=3d</code></pre>
+        <p>返回指定经纬度的格点每日天气预报。days 可选值：3d、7d，默认 3d。</p>
+        <p>可选参数：location、lon、lat、days、lang、unit。</p>
+      </div>
+      <div id="element">
+        <h2>格点逐小时天气预报</h2>
+        <pre><code>GET /api/grid-weather-hourly?apikey=你的密钥&amp;location=116.41,39.92&amp;hours=24h</code></pre>
+        <p>返回指定经纬度的格点逐小时天气预报。hours 可选值：24h、72h，默认 24h。</p>
+        <p>可选参数：location、lon、lat、hours、lang、unit。</p>
       </div>
       <div id="element">
         <h2>Hypixel玩家查询</h2>
