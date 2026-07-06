@@ -2,219 +2,930 @@
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
-    <title>文档</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>API 文档 - 没用的小废鼠 API</title>
     <style>
-      #navigation-bar {
-        overflow: hidden;
-        background-color: #333;
-        list-style-type: none;
-        top: 0;
-        left: 0;
-        right: 0;
-        position: fixed;
+      :root {
+        color-scheme: light;
+        --bg: #f6f8fb;
+        --surface: #ffffff;
+        --surface-muted: #f1f5f9;
+        --line: #d8e0ea;
+        --line-strong: #b7c4d4;
+        --text: #152033;
+        --muted: #607086;
+        --accent: #0f766e;
+        --accent-strong: #115e59;
+        --code-bg: #101827;
+        --code-text: #e6edf6;
+        --danger-bg: #fff1f2;
+        --danger-text: #be123c;
+        --radius: 8px;
+        --shadow: 0 16px 40px rgba(21, 32, 51, 0.08);
       }
-      #navigation-bar a {
-        color: white;
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--text);
+        background: var(--bg);
+        font-family: Arial, "Microsoft YaHei", sans-serif;
+        line-height: 1.65;
+      }
+
+      a {
+        color: var(--accent-strong);
         text-decoration: none;
-        margin-right: 20px;
       }
-      ul {
-        list-style-type: none;
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: blur(12px);
+      }
+
+      .topbar-inner {
         display: flex;
         align-items: center;
-      }
-      #element,
-      #commentaries {
-        max-width: 900px;
+        justify-content: space-between;
+        gap: 16px;
+        width: min(1180px, calc(100% - 32px));
         margin: 0 auto;
-        margin-top: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        background-color: #ffffff;
+        padding: 12px 0;
       }
-      #element a {
+
+      .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+      }
+
+      .brand strong {
+        font-size: 16px;
+        line-height: 1.25;
+      }
+
+      .brand span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .home-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 36px;
+        padding: 0 12px;
+        border: 1px solid var(--line-strong);
+        border-radius: 6px;
+        color: var(--text);
+        background: var(--surface);
+        font-size: 14px;
+        white-space: nowrap;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 248px minmax(0, 1fr);
+        gap: 28px;
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 28px 0 56px;
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 78px;
+        align-self: start;
+        max-height: calc(100vh - 96px);
+        overflow: auto;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .sidebar h2 {
+        margin: 0;
+        padding: 16px 16px 8px;
+        font-size: 13px;
+        color: var(--muted);
+        font-weight: 700;
+      }
+
+      .sidebar nav {
+        display: grid;
+        gap: 2px;
+        padding: 0 8px 12px;
+      }
+
+      .sidebar a {
+        display: block;
+        padding: 8px 10px;
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 14px;
+      }
+
+      .sidebar a:hover {
+        background: var(--surface-muted);
         text-decoration: none;
-        color: #1e90ff;
       }
-      #element img {
-        border-radius: 10px;
+
+      .content {
+        display: grid;
+        gap: 20px;
+        min-width: 0;
       }
-      #element code {
-        color: hsl(0, 0%, 35%);
+
+      .intro,
+      .section,
+      .endpoint {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+        box-shadow: var(--shadow);
       }
-      body {
-        background-color: #f5f5f5;
+
+      .intro {
+        padding: 28px;
       }
-      h2 {
-        color: #333;
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 10px;
+
+      .intro h1 {
+        margin: 0 0 10px;
+        font-size: 32px;
+        line-height: 1.2;
+        letter-spacing: 0;
       }
-    </style>
-    <script>
-      function navigation_bar() {
-        if (document.querySelector("navigation-bar")) {
-          var navbarHeight =
-            document.querySelector("navigation-bar").offsetHeight;
-          console.log(navbarHeight);
-          if (document.querySelector("element")) {
-            document.querySelector("element").style.marginTop =
-              navbarHeight + "px";
-          }
+
+      .intro p {
+        max-width: 760px;
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .quick-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 22px;
+      }
+
+      .quick-item {
+        min-width: 0;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 14px;
+        background: var(--surface-muted);
+      }
+
+      .quick-item span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .quick-item strong {
+        display: block;
+        margin-top: 4px;
+        font-size: 15px;
+        overflow-wrap: anywhere;
+      }
+
+      .section {
+        padding: 22px;
+      }
+
+      .section h2,
+      .endpoint h2 {
+        margin: 0 0 12px;
+        font-size: 22px;
+        line-height: 1.3;
+      }
+
+      .section p,
+      .endpoint p {
+        margin: 8px 0;
+        color: var(--muted);
+      }
+
+      .endpoint {
+        overflow: hidden;
+      }
+
+      .endpoint-header {
+        display: grid;
+        gap: 10px;
+        padding: 22px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .endpoint-title {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+      }
+
+      .method-line {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .method {
+        flex: 0 0 auto;
+        padding: 2px 8px;
+        border-radius: 5px;
+        color: #ffffff;
+        background: var(--accent);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      .path {
+        min-width: 0;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        font-size: 15px;
+        overflow-wrap: anywhere;
+      }
+
+      .tag {
+        flex: 0 0 auto;
+        padding: 3px 8px;
+        border-radius: 5px;
+        color: var(--accent-strong);
+        background: #dff7f3;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .endpoint-body {
+        display: grid;
+        gap: 18px;
+        padding: 22px;
+      }
+
+      .subsection h3 {
+        margin: 0 0 10px;
+        font-size: 16px;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 620px;
+        background: var(--surface);
+      }
+
+      th,
+      td {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+        font-size: 14px;
+      }
+
+      th {
+        color: var(--muted);
+        background: var(--surface-muted);
+        font-weight: 700;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      code {
+        font-family: Consolas, Monaco, "Courier New", monospace;
+      }
+
+      .inline-code {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--surface-muted);
+        color: var(--text);
+        font-size: 0.95em;
+      }
+
+      pre {
+        margin: 0;
+        overflow-x: auto;
+        border-radius: var(--radius);
+        background: var(--code-bg);
+        color: var(--code-text);
+      }
+
+      pre code {
+        display: block;
+        padding: 14px 16px;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .notice {
+        border-left: 4px solid var(--accent);
+        border-radius: 6px;
+        padding: 12px 14px;
+        color: var(--text);
+        background: #edfdf9;
+      }
+
+      .notice.danger {
+        border-left-color: var(--danger-text);
+        background: var(--danger-bg);
+        color: var(--danger-text);
+      }
+
+      .endpoint-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin: 14px 0 0;
+      }
+
+      .endpoint-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        min-width: 0;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--surface-muted);
+        color: var(--text);
+      }
+
+      .endpoint-link:hover {
+        border-color: var(--line-strong);
+        text-decoration: none;
+      }
+
+      .endpoint-link code {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        color: var(--accent-strong);
+      }
+
+      @media (max-width: 900px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          position: static;
+          max-height: none;
+        }
+
+        .sidebar nav {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .quick-grid,
+        .endpoint-list {
+          grid-template-columns: 1fr;
         }
       }
 
-      window.onload = function () {
-        adjustMarginTop(); // 初始化调整
-      };
+      @media (max-width: 560px) {
+        .topbar-inner,
+        .layout {
+          width: min(100% - 20px, 1180px);
+        }
 
-      window.onresize = function () {
-        adjustMarginTop(); // 窗口大小变化时重新调整
-      };
-      function adjustMarginTop() {
-        var navigationBarHeight =
-          document.getElementById("navigation-bar").offsetHeight;
-        document.getElementById("element").style.marginTop =
-          navigationBarHeight + 20 + "px";
+        .intro,
+        .section,
+        .endpoint-header,
+        .endpoint-body {
+          padding: 16px;
+        }
+
+        .intro h1 {
+          font-size: 26px;
+        }
+
+        .endpoint-title {
+          display: grid;
+        }
+
+        .sidebar nav {
+          grid-template-columns: 1fr;
+        }
       }
-    </script>
+    </style>
   </head>
   <body>
-    <div id="navigation-bar">
-      <ul>
-        <li><a href="/">首页</a></li>
-      </ul>
-    </div>
-    <div id="all">
-      <div id="element">
-        <h1>文档</h1>
-        <p>这里列出当前可用 API 的请求方式、参数和返回示例。所有接口在出错时都会返回 JSON，方便调用方直接读取错误原因。</p>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <strong>没用的小废鼠 API</strong>
+          <span>接口文档</span>
+        </div>
+        <a class="home-link" href="/">返回首页</a>
       </div>
-      <div id="element">
-        <h2>IP查询</h2>
-        <pre><code>GET /api/ip</code></pre>
-        <p>无需参数，返回当前请求的 IP 地址和 Cloudflare 识别到的地理位置信息。</p>
-        <p>返回数据格式</p>
-        <pre><code>
-            {
-                "ip": "你的IP",
-                "location": {
-                    "city": "城市",
-                    "region": "地区",
-                    "country": "国家"
-                }
-            }
-        </code></pre>
-      </div>
-      <div id="element">
-        <h2>天气查询</h2>
-        <pre><code>GET /api/weather?apikey=你的密钥</code></pre>
-        <p>兼容旧路径：GET /api/tq?apikey=你的密钥。</p>
-        <p>根据当前请求的 Cloudflare 城市信息查询实时天气。</p>
-        <p>apikey 可以放在 URL 查询参数中，也可以放在 x-api-key 请求头中。URL 参数兼容 apikey、apiKey 和 api_key 三种写法。</p>
-        <p>location 可选。城市天气接口支持 location=城市名、location=LocationID 或 location=经度,纬度；不传时会优先使用 Cloudflare 识别到的经纬度或城市。</p>
-        <p>服务端需要配置环境变量 HF_API_KEY，并绑定 D1 数据库 API_KEYS 用于校验 apikey。</p>
-        <p style="color: red;">由于和风天气计费方式调整，该接口必须携带 apikey。</p>
-        <p>返回数据格式</p>
-        <pre><code>
-            {
-                "code": "200",
-                "updateTime": "最近更新时间",
-                "fxLink": "响应式页面URL",
-                "now": {
-                    "obsTime": "数据观测时间",
-                    "temp": "温度",
-                    "feelsLike": "体感温度",
-                    "icon": "和风天气图标码",
-                    "text": "天气状况的文字描述",
-                    "wind360": "风向360角度",
-                    "windDir": "风向",
-                    "windScale": "风力等级",
-                    "windSpeed": "风速",
-                    "humidity": "相对湿度",
-                    "precip": "当前小时累计降水量",
-                    "pressure": "大气压强",
-                    "vis": "能见度",
-                    "cloud": "云量",
-                    "dew": "露点温度"
-                },
-                "refer": {
-                    "sources": [
-                        "天气归属"
-                    ],
-                    "license": [
-                        "和风天气使用协议"
-                    ]
-                }
-            }
-        </code></pre>
-        <p>错误返回示例</p>
-        <pre><code>
-            {
-                "success": false,
-                "error": {
-                    "code": "MISSING_API_KEY",
-                    "message": "缺少 apikey。请使用 ?apikey=你的密钥，或通过 x-api-key 请求头传入。"
-                }
-            }
-        </code></pre>
-      </div>
-      <div id="element">
-        <h2>每日天气预报</h2>
-        <pre><code>GET /api/weather-daily?apikey=你的密钥&amp;location=北京&amp;days=3d</code></pre>
-        <p>返回城市每日天气预报。days 可选值：3d、7d、10d、15d、30d，默认 3d。</p>
-        <p>可选参数：location、days、lang、unit。</p>
-      </div>
-      <div id="element">
-        <h2>逐小时天气预报</h2>
-        <pre><code>GET /api/weather-hourly?apikey=你的密钥&amp;location=北京&amp;hours=24h</code></pre>
-        <p>返回城市逐小时天气预报。hours 可选值：24h、72h、168h，默认 24h。</p>
-        <p>可选参数：location、hours、lang、unit。</p>
-      </div>
-      <div id="element">
-        <h2>格点实时天气</h2>
-        <pre><code>GET /api/grid-weather?apikey=你的密钥&amp;location=116.41,39.92</code></pre>
-        <p>返回指定经纬度的格点实时天气。格点天气必须提供经纬度，或让 Cloudflare 提供请求来源经纬度。</p>
-        <p>可选参数：location、lon、lat、lang、unit。</p>
-      </div>
-      <div id="element">
-        <h2>格点每日天气预报</h2>
-        <pre><code>GET /api/grid-weather-daily?apikey=你的密钥&amp;location=116.41,39.92&amp;days=3d</code></pre>
-        <p>返回指定经纬度的格点每日天气预报。days 可选值：3d、7d，默认 3d。</p>
-        <p>可选参数：location、lon、lat、days、lang、unit。</p>
-      </div>
-      <div id="element">
-        <h2>格点逐小时天气预报</h2>
-        <pre><code>GET /api/grid-weather-hourly?apikey=你的密钥&amp;location=116.41,39.92&amp;hours=24h</code></pre>
-        <p>返回指定经纬度的格点逐小时天气预报。hours 可选值：24h、72h，默认 24h。</p>
-        <p>可选参数：location、lon、lat、hours、lang、unit。</p>
-      </div>
-      <div id="element">
-        <h2>Hypixel玩家查询</h2>
-        <pre><code>GET /api/hyp?uuid=玩家UUID</code></pre>
-        <p>根据 Minecraft 玩家 UUID 查询 Hypixel 玩家信息。</p>
-        <p>服务端需要配置环境变量 HYPIXEL_API_KEY。</p>
-        <p>返回数据格式</p>
-        <pre><code>
-            {
-                "success": true,
-                "player": {
-                    "uuid": "玩家UUID"
-                }
-            }
-        </code></pre>
-        <p>错误返回示例</p>
-        <pre><code>
-            {
-                "success": false,
-                "error": {
-                    "code": "MISSING_UUID",
-                    "message": "缺少 uuid 参数，请使用 /api/hyp?uuid=玩家UUID 进行查询。"
-                }
-            }
-        </code></pre>
-      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="文档目录">
+        <h2>目录</h2>
+        <nav>
+          <a href="#overview">概览</a>
+          <a href="#auth">鉴权</a>
+          <a href="#ip">IP 查询</a>
+          <a href="#weather-now">实时天气</a>
+          <a href="#weather-daily">每日天气预报</a>
+          <a href="#weather-hourly">逐小时天气预报</a>
+          <a href="#grid-now">格点实时天气</a>
+          <a href="#grid-daily">格点每日预报</a>
+          <a href="#grid-hourly">格点逐小时预报</a>
+          <a href="#hypixel">Hypixel 查询</a>
+          <a href="#errors">错误格式</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section class="intro" id="overview">
+          <h1>API 文档</h1>
+          <p>
+            当前服务提供 IP 信息、和风天气、格点天气和 Hypixel 玩家查询。天气类接口会校验 apikey，
+            成功时直接返回上游数据，失败时返回统一 JSON 错误对象。
+          </p>
+          <div class="quick-grid" aria-label="服务概览">
+            <div class="quick-item">
+              <span>基础路径</span>
+              <strong><code>https://你的域名</code></strong>
+            </div>
+            <div class="quick-item">
+              <span>响应格式</span>
+              <strong>JSON</strong>
+            </div>
+            <div class="quick-item">
+              <span>天气鉴权</span>
+              <strong><code>apikey</code> 或 <code>x-api-key</code></strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="auth">
+          <h2>鉴权</h2>
+          <p>天气类接口必须携带 apikey。以下写法都支持：</p>
+          <pre><code>GET /api/weather?apikey=你的密钥
+GET /api/weather?apiKey=你的密钥
+GET /api/weather?api_key=你的密钥
+x-api-key: 你的密钥
+Authorization: Bearer 你的密钥</code></pre>
+          <p class="notice">
+            服务端需要配置 <code class="inline-code">HF_API_KEY</code>，并绑定 D1 数据库
+            <code class="inline-code">API_KEYS</code>。数据库中有效密钥需要满足 <code class="inline-code">active = 1</code>。
+          </p>
+        </section>
+
+        <section class="section">
+          <h2>天气位置参数</h2>
+          <p>城市天气接口支持城市名、LocationID 或经纬度；格点天气必须使用经纬度。</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>参数</th>
+                  <th>适用接口</th>
+                  <th>说明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>location=北京</code></td>
+                  <td>城市天气</td>
+                  <td>城市名、LocationID 或 <code>经度,纬度</code>。</td>
+                </tr>
+                <tr>
+                  <td><code>location=116.41,39.92</code></td>
+                  <td>城市天气、格点天气</td>
+                  <td>经度在前，纬度在后。</td>
+                </tr>
+                <tr>
+                  <td><code>lon=116.41&amp;lat=39.92</code></td>
+                  <td>城市天气、格点天气</td>
+                  <td>等价于传入 <code>location=116.41,39.92</code>。</td>
+                </tr>
+                <tr>
+                  <td>不传位置</td>
+                  <td>城市天气</td>
+                  <td>优先使用 Cloudflare 经纬度，其次使用 Cloudflare 城市信息。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="endpoint" id="ip">
+          <div class="endpoint-header">
+            <div class="endpoint-title">
+              <div>
+                <h2>IP 查询</h2>
+                <div class="method-line">
+                  <span class="method">GET</span>
+                  <span class="path">/api/ip</span>
+                </div>
+              </div>
+              <span class="tag">无需鉴权</span>
+            </div>
+            <p>返回当前请求的 IP 地址和 Cloudflare 识别到的地理位置。</p>
+          </div>
+          <div class="endpoint-body">
+            <div class="subsection">
+              <h3>响应示例</h3>
+              <pre><code>{
+  "ip": "203.0.113.10",
+  "location": {
+    "city": "Singapore",
+    "region": "Central Singapore",
+    "country": "SG"
+  }
+}</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="endpoint" id="weather-now">
+          <div class="endpoint-header">
+            <div class="endpoint-title">
+              <div>
+                <h2>实时天气</h2>
+                <div class="method-line">
+                  <span class="method">GET</span>
+                  <span class="path">/api/weather</span>
+                </div>
+              </div>
+              <span class="tag">需要 apikey</span>
+            </div>
+            <p>查询城市实时天气。旧路径 <code class="inline-code">/api/tq</code> 仍然可用。</p>
+          </div>
+          <div class="endpoint-body">
+            <div class="subsection">
+              <h3>请求示例</h3>
+              <pre><code>GET /api/weather?apikey=你的密钥&amp;location=北京</code></pre>
+            </div>
+            <div class="subsection">
+              <h3>参数</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>名称</th>
+                      <th>必填</th>
+                      <th>说明</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>apikey</code></td>
+                      <td>是</td>
+                      <td>也可通过 <code>x-api-key</code> 或 Bearer Token 传入。</td>
+                    </tr>
+                    <tr>
+                      <td><code>location</code></td>
+                      <td>否</td>
+                      <td>城市名、LocationID 或经纬度。</td>
+                    </tr>
+                    <tr>
+                      <td><code>lang</code></td>
+                      <td>否</td>
+                      <td>返回语言，默认 <code>zh</code>。</td>
+                    </tr>
+                    <tr>
+                      <td><code>unit</code></td>
+                      <td>否</td>
+                      <td>单位制，例如 <code>m</code> 或 <code>i</code>。</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="endpoint" id="weather-daily">
+          <div class="endpoint-header">
+            <div class="endpoint-title">
+              <div>
+                <h2>每日天气预报</h2>
+                <div class="method-line">
+                  <span class="method">GET</span>
+                  <span class="path">/api/weather-daily</span>
+                </div>
+              </div>
+              <span class="tag">需要 apikey</span>
+            </div>
+            <p>返回城市每日天气预报，默认 3 天。</p>
+          </div>
+          <div class="endpoint-body">
+            <div class="subsection">
+              <h3>请求示例</h3>
+              <pre><code>GET /api/weather-daily?apikey=你的密钥&amp;location=北京&amp;days=7d</code></pre>
+            </div>
+            <div class="subsection">
+              <h3>参数</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>名称</th>
+                      <th>必填</th>
+                      <th>说明</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>days</code></td>
+                      <td>否</td>
+                      <td>可选 <code>3d</code>、<code>7d</code>、<code>10d</code>、<code>15d</code>、<code>30d</code>，默认 <code>3d</code>。</td>
+                    </tr>
+                    <tr>
+                      <td><code>location</code></td>
+                      <td>否</td>
+                      <td>城市名、LocationID 或经纬度。</td>
+                    </tr>
+                    <tr>
+                      <td><code>lang</code> / <code>unit</code></td>
+                      <td>否</td>
+                      <td>语言和单位制。</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="endpoint" id="weather-hourly">
+          <div class="endpoint-header">
+            <div class="endpoint-title">
+              <div>
+                <h2>逐小时天气预报</h2>
+                <div class="method-line">
+                  <span class="method">GET</span>
+                  <span class="path">/api/weather-hourly</span>
+                </div>
+              </div>
+              <span class="tag">需要 apikey</span>
+            </div>
+            <p>返回城市逐小时天气预报，默认 24 小时。</p>
+          </div>
+          <div class="endpoint-body">
+            <div class="subsection">
+              <h3>请求示例</h3>
+              <pre><code>GET /api/weather-hourly?apikey=你的密钥&amp;location=北京&amp;hours=72h</code></pre>
+            </div>
+            <div class="subsection">
+              <h3>参数</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>名称</th>
+                      <th>必填</th>
+                      <th>说明</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>hours</code></td>
+                      <td>否</td>
+                      <td>可选 <code>24h</code>、<code>72h</code>、<code>168h</code>，默认 <code>24h</code>。</td>
+                    </tr>
+                    <tr>
+                      <td><code>location</code></td>
+                      <td>否</td>
+                      <td>城市名、LocationID 或经纬度。</td>
+                    </tr>
+                    <tr>
+                      <td><code>lang</code> / <code>unit</code></td>
+                      <td>否</td>
+                      <td>语言和单位制。</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="endpoint" id="grid-now">
+          <div class="endpoint-header">
+            <div class="endpoint-title">
+              <div>
+                <h2>格点实时天气</h2>
+                <div class="method-line">
+                  <span class="method">GET</span>
+                  <span class="path">/api/grid-weather</span>
+                </div>
+              </div>
+              <span class="tag">需要 apikey</span>
+            </div>
+            <p>查询指定经纬度的格点实时天气。</p>
+          </div>
+          <div class="endpoint-body">
+            <div class="subsection">
+              <h3>请求示例</h3>
+              <pre><code>GET /api/grid-weather?apikey=你的密钥&amp;location=116.41,39.92</code></pre>
+            </div>
+            <p class="notice danger">格点天气必须提供经纬度，推荐使用 <code>location=经度,纬度</code>。</p>
+          </div>
+        </section>
+
+        <section class="endpoint" id="grid-daily">
+          <div class="endpoint-header">
+            <div class="endpoint-title">
+              <div>
+                <h2>格点每日预报</h2>
+                <div class="method-line">
+                  <span class="method">GET</span>
+                  <span class="path">/api/grid-weather-daily</span>
+                </div>
+              </div>
+              <span class="tag">需要 apikey</span>
+            </div>
+            <p>返回指定经纬度的格点每日天气预报，默认 3 天。</p>
+          </div>
+          <div class="endpoint-body">
+            <div class="subsection">
+              <h3>请求示例</h3>
+              <pre><code>GET /api/grid-weather-daily?apikey=你的密钥&amp;location=116.41,39.92&amp;days=7d</code></pre>
+            </div>
+            <div class="subsection">
+              <h3>参数</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>名称</th>
+                      <th>必填</th>
+                      <th>说明</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>location</code> 或 <code>lon</code> + <code>lat</code></td>
+                      <td>是</td>
+                      <td>经纬度，格式为 <code>经度,纬度</code>。</td>
+                    </tr>
+                    <tr>
+                      <td><code>days</code></td>
+                      <td>否</td>
+                      <td>可选 <code>3d</code>、<code>7d</code>，默认 <code>3d</code>。</td>
+                    </tr>
+                    <tr>
+                      <td><code>lang</code> / <code>unit</code></td>
+                      <td>否</td>
+                      <td>语言和单位制。</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="endpoint" id="grid-hourly">
+          <div class="endpoint-header">
+            <div class="endpoint-title">
+              <div>
+                <h2>格点逐小时预报</h2>
+                <div class="method-line">
+                  <span class="method">GET</span>
+                  <span class="path">/api/grid-weather-hourly</span>
+                </div>
+              </div>
+              <span class="tag">需要 apikey</span>
+            </div>
+            <p>返回指定经纬度的格点逐小时天气预报，默认 24 小时。</p>
+          </div>
+          <div class="endpoint-body">
+            <div class="subsection">
+              <h3>请求示例</h3>
+              <pre><code>GET /api/grid-weather-hourly?apikey=你的密钥&amp;location=116.41,39.92&amp;hours=24h</code></pre>
+            </div>
+            <div class="subsection">
+              <h3>参数</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>名称</th>
+                      <th>必填</th>
+                      <th>说明</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>location</code> 或 <code>lon</code> + <code>lat</code></td>
+                      <td>是</td>
+                      <td>经纬度，格式为 <code>经度,纬度</code>。</td>
+                    </tr>
+                    <tr>
+                      <td><code>hours</code></td>
+                      <td>否</td>
+                      <td>可选 <code>24h</code>、<code>72h</code>，默认 <code>24h</code>。</td>
+                    </tr>
+                    <tr>
+                      <td><code>lang</code> / <code>unit</code></td>
+                      <td>否</td>
+                      <td>语言和单位制。</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="endpoint" id="hypixel">
+          <div class="endpoint-header">
+            <div class="endpoint-title">
+              <div>
+                <h2>Hypixel 玩家查询</h2>
+                <div class="method-line">
+                  <span class="method">GET</span>
+                  <span class="path">/api/hyp</span>
+                </div>
+              </div>
+              <span class="tag">无需 apikey</span>
+            </div>
+            <p>根据 Minecraft 玩家 UUID 查询 Hypixel 玩家信息。</p>
+          </div>
+          <div class="endpoint-body">
+            <div class="subsection">
+              <h3>请求示例</h3>
+              <pre><code>GET /api/hyp?uuid=玩家UUID</code></pre>
+            </div>
+            <div class="subsection">
+              <h3>参数</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>名称</th>
+                      <th>必填</th>
+                      <th>说明</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>uuid</code></td>
+                      <td>是</td>
+                      <td>Minecraft 玩家 UUID。</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="errors">
+          <h2>错误格式</h2>
+          <p>接口失败时会返回统一结构，调用方可以读取 <code class="inline-code">error.code</code> 和 <code class="inline-code">error.message</code>。</p>
+          <pre><code>{
+  "success": false,
+  "error": {
+    "code": "MISSING_API_KEY",
+    "message": "缺少 apikey。请使用 ?apikey=你的密钥，或通过 x-api-key 请求头传入。"
+  }
+}</code></pre>
+          <div class="endpoint-list">
+            <a class="endpoint-link" href="#weather-now"><span>实时天气</span><code>/api/weather</code></a>
+            <a class="endpoint-link" href="#weather-daily"><span>每日预报</span><code>/api/weather-daily</code></a>
+            <a class="endpoint-link" href="#weather-hourly"><span>逐小时预报</span><code>/api/weather-hourly</code></a>
+            <a class="endpoint-link" href="#grid-now"><span>格点天气</span><code>/api/grid-weather</code></a>
+          </div>
+        </section>
+      </main>
     </div>
   </body>
 </html>
